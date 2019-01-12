@@ -31,6 +31,6 @@
 
 `$ docker-compose -f docker-compose.yml up`
 
-### Referace
+### Referance
 
 อ่านได้จาก ["มาทำ Docker Environment กับ Laravel Project กัน"](https://medium.com/@jinawongjino/%E0%B8%A1%E0%B8%B2%E0%B8%97%E0%B8%B3-docker-environment-%E0%B8%81%E0%B8%B1%E0%B8%9A-laravel-project-%E0%B8%81%E0%B8%B1%E0%B8%99-25feb02e720f)
