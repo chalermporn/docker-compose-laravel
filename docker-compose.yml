@@ -1,0 +1,57 @@
+version: '2' # version ของ docker compose
+services:
+
+  # Php สำหรับการสร้าง php container
+  php:
+    build: ./docker-php # ชี้ไป path ของ Dockerfile เพื่อที่จะใช้ในการสร้าง container
+    working_dir: /var/www/laravel # directory ที่จะเป็นจัดที่เราทำงาน
+    volumes:
+      # เป็น volume ไฟล์ จากเครื่องเราไปยัง container จะเป็นการเชื่อมต่อกันแบบ
+      # ถ้าไฟล์ในเครื่องเราเปลี่ยนแปลงใน container ก็จะเปลี่ยนแปลงตามครับ
+      - ./:/var/www/laravel
+
+  # Web Server สำหรับการสร้าง nginx container
+  nginx:
+    build: ./docker-nginx
+    working_dir: /var/www/laravel # directory ที่จะเป็นจัดที่เราทำงาน
+    volumes_from:
+      - php # คือการ volume จาก php container นะครับ
+    ports:
+      - 8000:80 # port ที่เราต้องการจะใช้ระหว่าง {host}:{container} นะครับ
+
+  # Database คือ mysql container ครับ เพื่อที่จะทำเป็น database
+  database:
+    # ส่วนนี้เราจะดึง image มาตรง ๆ เลยครับโดยที่เราไม่สร้าง Dockerfile
+    # เพราะเราไม่ต้องการจะ เซตคำสั่งอะไรเพิ่มเติมแล้ว
+    image: mysql:5.7
+    volumes:
+      - ./mysql/data:/var/lib/mysql # ครับเช่นเคย volume database เข้ามาในเครื่องเราที่จะเก็บข้อมูลใน database ไว้
+    environment:
+      # สำหรับคนที่ต้องการดู config เพิ่มเติม https://hub.docker.com/_/mysql/
+      - MYSQL_DATABASE=laravel # ชื่อ database ซึ่งที่จะสร้างขึ้นหลังจาก container ถูกสร้างแล้ว
+      - MYSQL_USER=user # username ของ database ที่เราสร้างไว้
+      - MYSQL_PASSWORD=password # password ของ database ที่เราสร้างไว้
+      - MYSQL_ROOT_PASSWORD=root # password สำหรับ root database หากต้องการ
+    ports:
+        - "3306:3306" # port ที่เราต้องการจะใช้ระหว่าง {host}:{container} นะครับ
+
+  composer: # เป็น container สำหรับการรัน install package laravel ที่จะสั่งรันครั้งเดียวแล้วหยุดรัน container ไป
+    build: ./docker-php # ใช้ dockerfile เดียวกันกับ container php
+    working_dir: /var/www/laravel
+    volumes_from:
+      - php
+    command: "composer install" # คำสั่ง สำหรับ install package
+
+
+  # Phpmyadmin (optional) อันนี้เพิ่มเติม หากว่าเราต้องการที่จะ explore database อันนี้ขี้เกียจอธิบายละ 5555
+  myadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+        - 8890:80
+    environment:
+      PMA_HOST: database
+      MYSQL_ROOT_PASSWORD: p4ssw0rd!
+    restart: always
+    depends_on:
+        - database
