@@ -51,7 +51,6 @@ services:
         - 8890:80
     environment:
       PMA_HOST: database
-      MYSQL_ROOT_PASSWORD: p4ssw0rd!
     restart: always
     depends_on:
         - database
