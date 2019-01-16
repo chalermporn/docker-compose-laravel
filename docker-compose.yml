@@ -19,6 +19,8 @@ services:
     ports:
       - 8000:80 # port ที่เราต้องการจะใช้ระหว่าง {host}:{container} นะครับ
 
+
+
   # Database คือ mysql container ครับ เพื่อที่จะทำเป็น database
   database:
     # ส่วนนี้เราจะดึง image มาตรง ๆ เลยครับโดยที่เราไม่สร้าง Dockerfile
@@ -40,8 +42,10 @@ services:
     working_dir: /var/www/laravel
     volumes_from:
       - php
-    command: "composer install" # คำสั่ง สำหรับ install package
-
+    command: >
+        bash -c "chmod -R 777 /var/www/laravel/
+          && composer install
+          && composer update" # คำสั่ง สำหรับ install package
 
   # Phpmyadmin (optional) อันนี้เพิ่มเติม หากว่าเราต้องการที่จะ explore database อันนี้ขี้เกียจอธิบายละ 5555
   myadmin:
