@@ -19,7 +19,7 @@
 - nginx:1.10
 - mysql 5.7
 - phpMyAdmin
-- laravel 5.7
+- laravel 8.0
 
 ## Run Docker Compose
 
