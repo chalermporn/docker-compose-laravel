@@ -25,7 +25,7 @@ services:
   database:
     # ส่วนนี้เราจะดึง image มาตรง ๆ เลยครับโดยที่เราไม่สร้าง Dockerfile
     # เพราะเราไม่ต้องการจะ เซตคำสั่งอะไรเพิ่มเติมแล้ว
-    image: mysql:5.7
+    image: mysql:8.0
     volumes:
       - ./mysql/data:/var/lib/mysql # ครับเช่นเคย volume database เข้ามาในเครื่องเราที่จะเก็บข้อมูลใน database ไว้
     environment:
